@@ -65,7 +65,7 @@ if node['cloud_monitoring']['agent']['token'].nil?
 
   #Create the token within the api, I'm using run_action to make sure everything happens in the proper order.
   else
-    create_token = cloud_monitoring_agent_token "#{node.hostname}" do
+    create_token = cloud_monitoring_agent_token "#{node.fqdn}" do
       rackspace_username  node['cloud_monitoring']['rackspace_username']
       rackspace_api_key   node['cloud_monitoring']['rackspace_api_key']
       action :nothing
@@ -74,7 +74,7 @@ if node['cloud_monitoring']['agent']['token'].nil?
     create_token.run_action(:create)
 
     #Pull just the token itself into a variable named token
-    label = "#{node.hostname}"
+    label = "#{node.fqdn}"
     monitoring = Fog::Rackspace::Monitoring.new(
       :rackspace_api_key => node['cloud_monitoring']['rackspace_api_key'],
       :rackspace_username => node['cloud_monitoring']['rackspace_username']
@@ -104,7 +104,7 @@ if node['cloud_monitoring']['agent']['token'].nil?
       group "root"
       mode 0600
       variables(
-        :monitoring_id => "#{node.hostname}",
+        :monitoring_id => "#{node.fqdn}",
         :monitoring_token =>  token
       )
       action :nothing
