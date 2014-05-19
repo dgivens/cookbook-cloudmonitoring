@@ -16,11 +16,13 @@ module Opscode
         apikey = new_resource.rackspace_api_key || creds['apikey']
         username = new_resource.rackspace_username || creds['username']
         auth_url = new_resource.rackspace_auth_url || creds['auth_url']
+
         Chef::Log.debug("Opscode::Rackspace::Monitoring.cm: creating new Fog connection") if(!defined?(@@cm) || @@cm.nil?)
         @@cm ||= Fog::Rackspace::Monitoring.new(
           :rackspace_api_key => apikey,
           :rackspace_username => username,
-          :rackspace_auth_url => auth_url
+          :rackspace_auth_url => auth_url,
+          :rackspace_region => node['cloud_monitoring']['rackspace_region']
         )
 
         Chef::Log.debug("Opscode::Rackspace::Monitoring.cm: Loading views") if(!defined?(@@view) || @@view.nil?)

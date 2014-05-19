@@ -11,7 +11,7 @@ when "ubuntu", "debian"
 
     distribution "cloudmonitoring"
     components ["main"]
-    key "https://monitoring.api.rackspacecloud.com/pki/agent/linux.asc" 
+    key "https://monitoring.api.rackspacecloud.com/pki/agent/linux.asc"
     action :add
   end
 
@@ -23,7 +23,7 @@ when "redhat","centos","fedora", "amazon","scientific"
 
   #We need to figure out which signing key to use, cent5 and rhel5 have their own.
   if (node['platform'] == 'centos') && (releaseVersion == '5')
-    signingKey = 'https://monitoring.api.rackspacecloud.com/pki/agent/centos-5.asc' 
+    signingKey = 'https://monitoring.api.rackspacecloud.com/pki/agent/centos-5.asc'
   elsif (node['platform'] == 'redhat') && (releaseVersion == '5')
     signingKey = 'https://monitoring.api.rackspacecloud.com/pki/agent/redhat-5.asc'
   else
@@ -43,15 +43,17 @@ when "redhat","centos","fedora", "amazon","scientific"
 
 end
 
-begin
-  databag_dir = node["cloud_monitoring"]["credentials"]["databag_name"]
-  databag_filename = node["cloud_monitoring"]["credentials"]["databag_item"]
+if node['cloud_monitoring']['agent']['token'].nil?
+  begin
+    databag_dir = node["cloud_monitoring"]["credentials"]["databag_name"]
+    databag_filename = node["cloud_monitoring"]["credentials"]["databag_item"]
 
-  values = Chef::EncryptedDataBagItem.load(databag_dir, databag_filename)
+    values = Chef::EncryptedDataBagItem.load(databag_dir, databag_filename)
 
-  node.set['cloud_monitoring']['agent']['token'] = values['agent_token'] || nil
-rescue Exception => e
-  Chef::Log.error 'Failed to load rackspace cloud data bag: ' + e.to_s
+    node.set['cloud_monitoring']['agent']['token'] = values['agent_token'] || nil
+  rescue Exception => e
+    Chef::Log.error 'Failed to load rackspace cloud data bag: ' + e.to_s
+  end
 end
 
 
