@@ -24,6 +24,7 @@ default['cloud_monitoring']['rackspace_username'] = 'your_rackspace_username'
 default['cloud_monitoring']['rackspace_api_key'] = 'your_rackspace_api_key'
 default['cloud_monitoring']['rackspace_auth_region'] = 'us'
 default['cloud_monitoring']['abort_on_failure'] = true
+default['cloud_monitoring']['not_cloud_server'] = false
 
 default['cloud_monitoring']['agent'] = {}
 default['cloud_monitoring']['agent']['id'] = nil
